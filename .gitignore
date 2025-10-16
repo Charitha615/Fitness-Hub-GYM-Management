@@ -1,0 +1,19 @@
+# Comment - lines starting with # are ignored
+
+# Ignore specific files
+filename.txt
+config.yml
+
+# Ignore entire directories
+node_modules/
+build/
+dist/
+.env
+
+# Wildcard patterns
+*.log
+*.tmp
+*.DS_Store
+
+# Negation (don't ignore)
+!important.log
