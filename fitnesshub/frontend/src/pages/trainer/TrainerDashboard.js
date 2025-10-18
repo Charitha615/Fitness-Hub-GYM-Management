@@ -4,6 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 import { trainerAPI } from '../../services/api';
 import './TrainerDashboard.css';
 
+// PDF Generator Component
+import PDFGenerator from './PDFGenerator.js';
+
 const TrainerDashboard = () => {
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
@@ -16,6 +19,12 @@ const TrainerDashboard = () => {
     const [showWorkoutForm, setShowWorkoutForm] = useState(false);
     const [editingPlan, setEditingPlan] = useState(null);
     const [loading, setLoading] = useState(false);
+    
+    // PDF Generation States
+    const [showPDFModal, setShowPDFModal] = useState(false);
+    const [pdfType, setPdfType] = useState('');
+    const [pdfData, setPdfData] = useState(null);
+    const [generatingPDF, setGeneratingPDF] = useState(false);
 
     const [dietForm, setDietForm] = useState({
         title: '',
@@ -70,6 +79,77 @@ const TrainerDashboard = () => {
             alert('Failed to load data');
         } finally {
             setLoading(false);
+        }
+    };
+
+    // PDF Generation Functions
+    const generateDietPlanPDF = async (plan) => {
+        setGeneratingPDF(true);
+        try {
+            setPdfType('diet');
+            setPdfData(plan);
+            setShowPDFModal(true);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Failed to generate PDF');
+        } finally {
+            setGeneratingPDF(false);
+        }
+    };
+
+    const generateWorkoutPlanPDF = async (plan) => {
+        setGeneratingPDF(true);
+        try {
+            setPdfType('workout');
+            setPdfData(plan);
+            setShowPDFModal(true);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Failed to generate PDF');
+        } finally {
+            setGeneratingPDF(false);
+        }
+    };
+
+    const generateSubscriberReportPDF = async () => {
+        setGeneratingPDF(true);
+        try {
+            const reportData = {
+                subscribers: subscribers,
+                statistics: statistics,
+                generatedAt: new Date().toLocaleDateString(),
+                generatedBy: currentUser?.name
+            };
+            setPdfType('subscribers');
+            setPdfData(reportData);
+            setShowPDFModal(true);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Failed to generate PDF');
+        } finally {
+            setGeneratingPDF(false);
+        }
+    };
+
+    const generateDashboardReportPDF = async () => {
+        setGeneratingPDF(true);
+        try {
+            const reportData = {
+                statistics: statistics,
+                dietPlans: dietPlans.length,
+                workoutPlans: workoutPlans.length,
+                totalPlans: dietPlans.length + workoutPlans.length,
+                generatedAt: new Date().toLocaleDateString(),
+                generatedBy: currentUser?.name
+            };
+            setPdfType('dashboard');
+            setPdfData(reportData);
+            setShowPDFModal(true);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Failed to generate PDF');
+        } finally {
+            setGeneratingPDF(false);
         }
     };
 
@@ -241,6 +321,16 @@ const TrainerDashboard = () => {
             <div className="dashboard-header">
                 <h1>Trainer Dashboard</h1>
                 <p>Welcome back, {currentUser?.name}! Here's your overview.</p>
+                
+                <div className="report-actions">
+                    <button 
+                        className="btn-pdf-modern"
+                        onClick={generateDashboardReportPDF}
+                        disabled={generatingPDF}
+                    >
+                        {generatingPDF ? 'Generating...' : '📊 Generate Dashboard Report'}
+                    </button>
+                </div>
             </div>
 
             {statistics && (
@@ -263,7 +353,7 @@ const TrainerDashboard = () => {
                         <div className="stat-icon">💰</div>
                         <div className="stat-content">
                             <h3>Total Revenue</h3>
-                            <p className="stat-number">Rs.{statistics.totalRevenue}</p>
+                            <p className="stat-number">LKR.{statistics.totalRevenue}</p>
                         </div>
                     </div>
                     <div className="stat-card-modern info">
@@ -329,17 +419,35 @@ const TrainerDashboard = () => {
                     <h1>Diet Plans</h1>
                     <p>Manage your nutrition plans and meal programs</p>
                 </div>
-                <button 
-                    className="btn-create-modern"
-                    onClick={() => {
-                        setEditingPlan(null);
-                        resetDietForm();
-                        setShowDietForm(true);
-                    }}
-                >
-                    <span>+</span>
-                    Create Diet Plan
-                </button>
+                <div className="header-actions">
+                    <button 
+                        className="btn-pdf-modern"
+                        onClick={() => {
+                            const allPlansData = {
+                                plans: dietPlans,
+                                generatedAt: new Date().toLocaleDateString(),
+                                totalPlans: dietPlans.length
+                            };
+                            setPdfType('all-diets');
+                            setPdfData(allPlansData);
+                            setShowPDFModal(true);
+                        }}
+                        disabled={generatingPDF || dietPlans.length === 0}
+                    >
+                        {generatingPDF ? 'Generating...' : '📊 Export All Plans'}
+                    </button>
+                    <button 
+                        className="btn-create-modern"
+                        onClick={() => {
+                            setEditingPlan(null);
+                            resetDietForm();
+                            setShowDietForm(true);
+                        }}
+                    >
+                        <span>+</span>
+                        Create Diet Plan
+                    </button>
+                </div>
             </div>
 
             {loading ? (
@@ -397,7 +505,7 @@ const TrainerDashboard = () => {
                                 </div>
                                 <div className="plan-stat">
                                     <span className="stat-label">Price</span>
-                                    <span className="stat-value price">${plan.price}</span>
+                                    <span className="stat-value price">LKR{plan.price}</span>
                                 </div>
                             </div>
                             <div className="plan-footer">
@@ -405,6 +513,13 @@ const TrainerDashboard = () => {
                                     <span>🍽️ {plan.meals.length} meals</span>
                                 </div>
                                 <div className="plan-actions-modern">
+                                    <button 
+                                        className="btn-pdf-small"
+                                        onClick={() => generateDietPlanPDF(plan)}
+                                        title="Generate PDF"
+                                    >
+                                        📄
+                                    </button>
                                     <button 
                                         className="btn-edit-modern"
                                         onClick={() => handleEditDietPlan(plan)}
@@ -433,17 +548,35 @@ const TrainerDashboard = () => {
                     <h1>Workout Plans</h1>
                     <p>Manage your exercise programs and training routines</p>
                 </div>
-                <button 
-                    className="btn-create-modern"
-                    onClick={() => {
-                        setEditingPlan(null);
-                        resetWorkoutForm();
-                        setShowWorkoutForm(true);
-                    }}
-                >
-                    <span>+</span>
-                    Create Workout Plan
-                </button>
+                <div className="header-actions">
+                    <button 
+                        className="btn-pdf-modern"
+                        onClick={() => {
+                            const allPlansData = {
+                                plans: workoutPlans,
+                                generatedAt: new Date().toLocaleDateString(),
+                                totalPlans: workoutPlans.length
+                            };
+                            setPdfType('all-workouts');
+                            setPdfData(allPlansData);
+                            setShowPDFModal(true);
+                        }}
+                        disabled={generatingPDF || workoutPlans.length === 0}
+                    >
+                        {generatingPDF ? 'Generating...' : '📊 Export All Plans'}
+                    </button>
+                    <button 
+                        className="btn-create-modern"
+                        onClick={() => {
+                            setEditingPlan(null);
+                            resetWorkoutForm();
+                            setShowWorkoutForm(true);
+                        }}
+                    >
+                        <span>+</span>
+                        Create Workout Plan
+                    </button>
+                </div>
             </div>
 
             {loading ? (
@@ -501,7 +634,7 @@ const TrainerDashboard = () => {
                                 </div>
                                 <div className="plan-stat">
                                     <span className="stat-label">Price</span>
-                                    <span className="stat-value price">${plan.price}</span>
+                                    <span className="stat-value price">LKR{plan.price}</span>
                                 </div>
                             </div>
                             <div className="plan-footer">
@@ -509,6 +642,13 @@ const TrainerDashboard = () => {
                                     <span>🏋️ {plan.exercises.length} exercises</span>
                                 </div>
                                 <div className="plan-actions-modern">
+                                    <button 
+                                        className="btn-pdf-small"
+                                        onClick={() => generateWorkoutPlanPDF(plan)}
+                                        title="Generate PDF"
+                                    >
+                                        📄
+                                    </button>
                                     <button 
                                         className="btn-edit-modern"
                                         onClick={() => handleEditWorkoutPlan(plan)}
@@ -537,6 +677,13 @@ const TrainerDashboard = () => {
                     <h1>My Subscribers</h1>
                     <p>Manage and view all your client subscriptions</p>
                 </div>
+                <button 
+                    className="btn-pdf-modern"
+                    onClick={generateSubscriberReportPDF}
+                    disabled={generatingPDF || subscribers.length === 0}
+                >
+                    {generatingPDF ? 'Generating...' : '📊 Generate Report'}
+                </button>
             </div>
 
             {loading ? (
@@ -601,7 +748,7 @@ const TrainerDashboard = () => {
                                             {sub.workoutPlan?.title || 'N/A'}
                                         </span>
                                     </td>
-                                    <td className="amount">${sub.amount}</td>
+                                    <td className="amount">LKR{sub.amount}</td>
                                     <td>
                                         <div className="date-info">
                                             <small>Start: {new Date(sub.startDate).toLocaleDateString()}</small>
@@ -695,7 +842,7 @@ const TrainerDashboard = () => {
                         </div>
 
                         <div className="form-group-modern">
-                            <label>Price ($)</label>
+                            <label>Price (LKR)</label>
                             <input
                                 type="number"
                                 step="0.01"
@@ -847,7 +994,7 @@ const TrainerDashboard = () => {
                         </div>
 
                         <div className="form-group-modern">
-                            <label>Price ($)</label>
+                            <label>Price (LKR)</label>
                             <input
                                 type="number"
                                 step="0.01"
@@ -995,6 +1142,15 @@ const TrainerDashboard = () => {
 
             {showDietForm && renderDietForm()}
             {showWorkoutForm && renderWorkoutForm()}
+            
+            {/* PDF Generator Modal */}
+            {showPDFModal && (
+                <PDFGenerator
+                    type={pdfType}
+                    data={pdfData}
+                    onClose={() => setShowPDFModal(false)}
+                />
+            )}
         </div>
     );
 };

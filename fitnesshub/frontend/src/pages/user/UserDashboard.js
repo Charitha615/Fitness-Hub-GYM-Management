@@ -288,7 +288,7 @@ const UserDashboard = () => {
                                             {subscription.trainerDietPlans.slice(0, 2).map(plan => (
                                                 <div key={plan._id} className="included-plan-item">
                                                     <span>{plan.title}</span>
-                                                    <small>${plan.price} • {plan.duration} weeks</small>
+                                                    <small>LKR{plan.price} • {plan.duration} weeks</small>
                                                 </div>
                                             ))}
                                             {subscription.trainerDietPlans.length > 2 && (
@@ -303,7 +303,7 @@ const UserDashboard = () => {
                                             {subscription.trainerWorkoutPlans.slice(0, 2).map(plan => (
                                                 <div key={plan._id} className="included-plan-item">
                                                     <span>{plan.title}</span>
-                                                    <small>${plan.price} • {plan.duration} weeks</small>
+                                                    <small>LKR{plan.price} • {plan.duration} weeks</small>
                                                 </div>
                                             ))}
                                             {subscription.trainerWorkoutPlans.length > 2 && (
@@ -341,7 +341,7 @@ const UserDashboard = () => {
                             </div>
                             
                             <div className="subscription-footer">
-                                <span className="price">${subscription.amount}</span>
+                                <span className="price">LKR{subscription.amount}</span>
                                 <div className="subscription-actions">
                                     <button 
                                         className="view-details-btn"
@@ -621,7 +621,7 @@ const UserDashboard = () => {
                                 >
                                     <div className="plan-header">
                                         <h4>{plan.name}</h4>
-                                        <div className="plan-price">${plan.price}</div>
+                                        <div className="plan-price">LKR{plan.price}</div>
                                     </div>
                                     <p className="plan-duration">{plan.duration} days access</p>
                                     <ul className="plan-features-modern">
@@ -656,7 +656,7 @@ const UserDashboard = () => {
                                             <option value="">No Diet Plan</option>
                                             {selectedTrainer.dietPlans.map(plan => (
                                                 <option key={plan._id} value={plan._id}>
-                                                    {plan.title} - ${plan.price} ({plan.duration} weeks)
+                                                    {plan.title} - LKR{plan.price} ({plan.duration} weeks)
                                                 </option>
                                             ))}
                                         </select>
@@ -676,7 +676,7 @@ const UserDashboard = () => {
                                             <option value="">No Workout Plan</option>
                                             {selectedTrainer.workoutPlans.map(plan => (
                                                 <option key={plan._id} value={plan._id}>
-                                                    {plan.title} - ${plan.price} ({plan.duration} weeks)
+                                                    {plan.title} - LKR{plan.price} ({plan.duration} weeks)
                                                 </option>
                                             ))}
                                         </select>
@@ -689,23 +689,23 @@ const UserDashboard = () => {
                                 <div className="summary-items">
                                     <div className="summary-item">
                                         <span>Subscription Plan:</span>
-                                        <span>${selectedPlan.price}</span>
+                                        <span>LKR{selectedPlan.price}</span>
                                     </div>
                                     {selectedDietPlan && (
                                         <div className="summary-item">
                                             <span>Diet Plan:</span>
-                                            <span>${selectedDietPlan.price}</span>
+                                            <span>LKR{selectedDietPlan.price}</span>
                                         </div>
                                     )}
                                     {selectedWorkoutPlan && (
                                         <div className="summary-item">
                                             <span>Workout Plan:</span>
-                                            <span>${selectedWorkoutPlan.price}</span>
+                                            <span>LKR{selectedWorkoutPlan.price}</span>
                                         </div>
                                     )}
                                     <div className="summary-total">
                                         <span>Total Amount:</span>
-                                        <span>${calculateTotalPrice()}</span>
+                                        <span>LKR{calculateTotalPrice()}</span>
                                     </div>
                                 </div>
                             </div>
@@ -728,7 +728,7 @@ const UserDashboard = () => {
                             onClick={handleConfirmSubscription}
                             disabled={!selectedPlan}
                         >
-                            Complete Subscription - ${calculateTotalPrice()}
+                            Complete Subscription - LKR{calculateTotalPrice()}
                         </button>
                     </div>
                 </div>
