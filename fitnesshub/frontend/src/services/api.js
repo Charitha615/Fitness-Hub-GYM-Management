@@ -74,8 +74,6 @@ export const userAPI = {
     getMySubscriptions: () => API.get('/user/my-subscriptions')
 };
 
-// You don't need this separate subscriptionPlanAPI since it's already in adminAPI
-// But if you want to keep it for organization, make sure it uses the same API instance:
 export const subscriptionPlanAPI = {
     create: (data) => API.post('/admin/subscription-plans', data),
     getAll: () => API.get('/admin/subscription-plans'),

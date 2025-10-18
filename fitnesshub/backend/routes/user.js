@@ -1,9 +1,10 @@
 const express = require('express');
+const mongoose = require('mongoose'); // Add this import
 const UserSubscription = require('../models/UserSubscription');
 const SubscriptionPlan = require('../models/SubscriptionPlan');
-const User = require('../models/User'); // Add this import
-const DietPlan = require('../models/DietPlan'); // Add this import
-const WorkoutPlan = require('../models/WorkoutPlan'); // Add this import
+const User = require('../models/User');
+const DietPlan = require('../models/DietPlan');
+const WorkoutPlan = require('../models/WorkoutPlan');
 const { auth } = require('../middleware/auth');
 const router = express.Router();
 
@@ -145,17 +146,92 @@ router.post('/subscribe', auth, userAuth, async (req, res) => {
     }
 });
 
-// Get user's active subscriptions
+// Get user's active subscriptions with full details using aggregation
 router.get('/my-subscriptions', auth, userAuth, async (req, res) => {
     try {
-        const subscriptions = await UserSubscription.find({
-            user: req.user._id
-        })
-        .populate('trainer', 'name email specialization experience')
-        .populate('subscriptionPlan', 'name duration price features')
-        .populate('dietPlan', 'title duration targetAudience')
-        .populate('workoutPlan', 'title duration difficulty')
-        .sort({ createdAt: -1 });
+        const subscriptions = await UserSubscription.aggregate([
+            {
+                $match: {
+                    user: new mongoose.Types.ObjectId(req.user._id) // Use new keyword
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'trainer',
+                    foreignField: '_id',
+                    as: 'trainer'
+                }
+            },
+            {
+                $unwind: '$trainer'
+            },
+            {
+                $lookup: {
+                    from: 'subscriptionplans',
+                    localField: 'subscriptionPlan',
+                    foreignField: '_id',
+                    as: 'subscriptionPlan'
+                }
+            },
+            {
+                $unwind: '$subscriptionPlan'
+            },
+            {
+                $lookup: {
+                    from: 'dietplans',
+                    localField: 'dietPlan',
+                    foreignField: '_id',
+                    as: 'dietPlan'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$dietPlan',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: 'workoutplans',
+                    localField: 'workoutPlan',
+                    foreignField: '_id',
+                    as: 'workoutPlan'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$workoutPlan',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: 'dietplans',
+                    localField: 'trainer._id',
+                    foreignField: 'trainer', // Changed from 'createdBy' to 'trainer'
+                    as: 'trainerDietPlans'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'workoutplans',
+                    localField: 'trainer._id',
+                    foreignField: 'trainer', // Changed from 'createdBy' to 'trainer'
+                    as: 'trainerWorkoutPlans'
+                }
+            },
+            {
+                $project: {
+                    'trainer.password': 0,
+                    'trainerDietPlans.trainer': 0,
+                    'trainerWorkoutPlans.trainer': 0
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            }
+        ]);
 
         res.json(subscriptions);
     } catch (error) {
