@@ -88,6 +88,11 @@ const SubscriptionPlans = () => {
         // Filter out empty features
         const filteredFeatures = formData.features.filter(feature => feature.trim() !== '');
         
+        if (filteredFeatures.length === 0) {
+            alert('Please add at least one feature');
+            return;
+        }
+
         const submitData = {
             ...formData,
             features: filteredFeatures,
@@ -151,35 +156,59 @@ const SubscriptionPlans = () => {
         }
     };
 
+    const getPlanColor = (planType) => {
+        const colors = {
+            basic: '#27ae60',
+            premium: '#f39c12',
+            vip: '#e74c3c',
+            custom: '#9b59b6'
+        };
+        return colors[planType] || '#3498db';
+    };
+
     return (
-        <div className="subscription-plans">
-            <div className="plans-header">
-                <h2>Subscription Plans Management</h2>
+        <div className="subscription-plans-modern">
+            <div className="section-header-modern">
+                <div className="header-content">
+                    <h1>Subscription Plans</h1>
+                    <p>Manage pricing plans and features for your platform</p>
+                </div>
                 <button 
-                    className="btn-create"
+                    className="btn-create-modern"
                     onClick={() => setShowForm(true)}
                 >
+                    <span>+</span>
                     Create New Plan
                 </button>
             </div>
 
             {showForm && (
-                <div className="form-modal-overlay">
-                    <div className="form-modal">
-                        <h3>{editingPlan ? 'Edit' : 'Create'} Subscription Plan</h3>
-                        <form onSubmit={handleSubmit}>
-                            <div className="form-row">
-                                <div className="form-group">
+                <div className="modal-overlay-modern">
+                    <div className="modal-content-modern large">
+                        <div className="modal-header-modern">
+                            <h2>{editingPlan ? 'Edit' : 'Create'} Subscription Plan</h2>
+                            <button 
+                                className="close-btn-modern"
+                                onClick={resetForm}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        
+                        <form onSubmit={handleSubmit} className="form-modern">
+                            <div className="form-grid">
+                                <div className="form-group-modern">
                                     <label>Plan Name *</label>
                                     <input
                                         type="text"
                                         name="name"
                                         value={formData.name}
                                         onChange={handleInputChange}
+                                        placeholder="Enter plan name"
                                         required
                                     />
                                 </div>
-                                <div className="form-group">
+                                <div className="form-group-modern">
                                     <label>Plan Type *</label>
                                     <select
                                         name="planType"
@@ -195,19 +224,20 @@ const SubscriptionPlans = () => {
                                 </div>
                             </div>
 
-                            <div className="form-group">
+                            <div className="form-group-modern full-width">
                                 <label>Description *</label>
                                 <textarea
                                     name="description"
                                     value={formData.description}
                                     onChange={handleInputChange}
+                                    placeholder="Describe this subscription plan"
                                     rows="3"
                                     required
                                 />
                             </div>
 
-                            <div className="form-row">
-                                <div className="form-group">
+                            <div className="form-grid">
+                                <div className="form-group-modern">
                                     <label>Duration (days) *</label>
                                     <input
                                         type="number"
@@ -218,7 +248,7 @@ const SubscriptionPlans = () => {
                                         required
                                     />
                                 </div>
-                                <div className="form-group">
+                                <div className="form-group-modern">
                                     <label>Price ($) *</label>
                                     <input
                                         type="number"
@@ -232,54 +262,60 @@ const SubscriptionPlans = () => {
                                 </div>
                             </div>
 
-                            <div className="form-group">
-                                <label>Features *</label>
-                                {formData.features.map((feature, index) => (
-                                    <div key={index} className="feature-input">
-                                        <input
-                                            type="text"
-                                            value={feature}
-                                            onChange={(e) => handleFeatureChange(index, e.target.value)}
-                                            placeholder={`Feature ${index + 1}`}
-                                            required
-                                        />
-                                        {formData.features.length > 1 && (
-                                            <button
-                                                type="button"
-                                                className="btn-remove-feature"
-                                                onClick={() => removeFeatureField(index)}
-                                            >
-                                                Remove
-                                            </button>
-                                        )}
-                                    </div>
-                                ))}
-                                <button
-                                    type="button"
-                                    className="btn-add-feature"
-                                    onClick={addFeatureField}
-                                >
-                                    Add Feature
-                                </button>
+                            <div className="form-section-modern">
+                                <div className="section-header-modern">
+                                    <h4>Plan Features *</h4>
+                                    <button
+                                        type="button"
+                                        className="btn-add-modern"
+                                        onClick={addFeatureField}
+                                    >
+                                        + Add Feature
+                                    </button>
+                                </div>
+                                
+                                <div className="features-list">
+                                    {formData.features.map((feature, index) => (
+                                        <div key={index} className="feature-item-modern">
+                                            <input
+                                                type="text"
+                                                value={feature}
+                                                onChange={(e) => handleFeatureChange(index, e.target.value)}
+                                                placeholder={`Feature ${index + 1}`}
+                                                required
+                                            />
+                                            {formData.features.length > 1 && (
+                                                <button
+                                                    type="button"
+                                                    className="btn-remove-modern"
+                                                    onClick={() => removeFeatureField(index)}
+                                                >
+                                                    ×
+                                                </button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
-                            <div className="form-group checkbox-group">
-                                <label>
+                            <div className="form-group-modern checkbox-group">
+                                <label className="checkbox-label">
                                     <input
                                         type="checkbox"
                                         name="isActive"
                                         checked={formData.isActive}
                                         onChange={handleInputChange}
                                     />
+                                    <span className="checkmark"></span>
                                     Active Plan
                                 </label>
                             </div>
 
-                            <div className="form-actions">
-                                <button type="submit" className="btn-save">
-                                    {editingPlan ? 'Update' : 'Create'} Plan
+                            <div className="form-actions-modern">
+                                <button type="submit" className="btn-primary-modern">
+                                    {editingPlan ? 'Update Plan' : 'Create Plan'}
                                 </button>
-                                <button type="button" className="btn-cancel" onClick={resetForm}>
+                                <button type="button" className="btn-secondary-modern" onClick={resetForm}>
                                     Cancel
                                 </button>
                             </div>
@@ -289,55 +325,73 @@ const SubscriptionPlans = () => {
             )}
 
             {loading ? (
-                <div className="loading">Loading subscription plans...</div>
-            ) : (
-                <div className="plans-grid">
-                    {plans.map(plan => (
-                        <div key={plan._id} className={`plan-card ${plan.planType}`}>
-                            <div className="plan-header">
-                                <h3>{plan.name}</h3>
-                                <span className={`plan-badge ${plan.planType}`}>
-                                    {plan.planType}
-                                </span>
+                <div className="loading-grid">
+                    {[1, 2, 3].map(i => (
+                        <div key={i} className="plan-card-skeleton">
+                            <div className="skeleton-header"></div>
+                            <div className="skeleton-content">
+                                <div className="skeleton-line short"></div>
+                                <div className="skeleton-line medium"></div>
+                                <div className="skeleton-line long"></div>
+                                <div className="skeleton-line long"></div>
                             </div>
-                            
-                            <div className="plan-price">
-                                ${plan.price}
-                                <span className="plan-duration">/{plan.duration} days</span>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="plans-grid-modern">
+                    {plans.map(plan => (
+                        <div 
+                            key={plan._id} 
+                            className="plan-card-modern"
+                            style={{ '--plan-color': getPlanColor(plan.planType) }}
+                        >
+                            <div className="plan-header-modern">
+                                <div className="plan-title">
+                                    <h3>{plan.name}</h3>
+                                    <span className="plan-type-badge">{plan.planType}</span>
+                                </div>
+                                <div className="plan-price-modern">
+                                    ${plan.price}
+                                    <span className="plan-duration">/{plan.duration} days</span>
+                                </div>
                             </div>
                             
                             <p className="plan-description">{plan.description}</p>
                             
-                            <div className="plan-features">
-                                <h4>Features:</h4>
+                            <div className="plan-features-modern">
+                                <h4>What's included:</h4>
                                 <ul>
                                     {plan.features.map((feature, index) => (
-                                        <li key={index}>{feature}</li>
+                                        <li key={index}>
+                                            <span className="feature-icon">✓</span>
+                                            {feature}
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
                             
-                            <div className="plan-footer">
+                            <div className="plan-footer-modern">
                                 <div className="plan-status">
-                                    <span className={`status ${plan.isActive ? 'active' : 'inactive'}`}>
+                                    <span className={`status-badge-modern ${plan.isActive ? 'active' : 'inactive'}`}>
                                         {plan.isActive ? 'Active' : 'Inactive'}
                                     </span>
                                 </div>
-                                <div className="plan-actions">
+                                <div className="plan-actions-modern">
                                     <button 
-                                        className="btn-edit"
+                                        className="btn-edit-modern"
                                         onClick={() => handleEdit(plan)}
                                     >
                                         Edit
                                     </button>
                                     <button 
-                                        className={`btn-status ${plan.isActive ? 'deactivate' : 'activate'}`}
+                                        className={`btn-status-modern ${plan.isActive ? 'deactivate' : 'activate'}`}
                                         onClick={() => togglePlanStatus(plan)}
                                     >
                                         {plan.isActive ? 'Deactivate' : 'Activate'}
                                     </button>
                                     <button 
-                                        className="btn-delete"
+                                        className="btn-delete-modern"
                                         onClick={() => handleDelete(plan._id, plan.name)}
                                     >
                                         Delete
@@ -350,8 +404,16 @@ const SubscriptionPlans = () => {
             )}
 
             {plans.length === 0 && !loading && (
-                <div className="no-plans">
-                    <p>No subscription plans found. Create your first plan to get started.</p>
+                <div className="empty-state">
+                    <div className="empty-icon">💰</div>
+                    <h3>No Subscription Plans</h3>
+                    <p>Create your first subscription plan to start monetizing your platform</p>
+                    <button 
+                        className="btn-primary-modern"
+                        onClick={() => setShowForm(true)}
+                    >
+                        Create First Plan
+                    </button>
                 </div>
             )}
         </div>

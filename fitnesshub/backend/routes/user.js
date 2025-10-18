@@ -164,11 +164,11 @@ router.get('/my-subscriptions', auth, userAuth, async (req, res) => {
                 }
             },
             {
-                $unwind: '$trainer'
+                $unwind: '$trainer'  
             },
             {
                 $lookup: {
-                    from: 'subscriptionplans',
+                    from: 'subscriptionplans',  
                     localField: 'subscriptionPlan',
                     foreignField: '_id',
                     as: 'subscriptionPlan'
