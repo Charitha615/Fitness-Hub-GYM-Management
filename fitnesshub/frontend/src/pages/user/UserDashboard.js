@@ -3,10 +3,11 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { userAPI } from '../../services/api';
 import './UserDashboard.css';
+import { generateSubscriptionPDF } from '../../utils/subscriptionPdfGenerator.js';
 
 const UserDashboard = () => {
     const { currentUser, logout } = useAuth();
-    const navigate = useNavigate(); // Add this hook
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('trainers');
     const [trainers, setTrainers] = useState([]);
     const [subscriptionPlans, setSubscriptionPlans] = useState([]);
@@ -92,6 +93,31 @@ const UserDashboard = () => {
         } catch (error) {
             console.error('Error creating subscription:', error);
             alert('Failed to create subscription');
+        }
+    };
+
+    const handleDownloadSubscriptionPDF = async (subscription) => {
+        try {
+            await generateSubscriptionPDF(subscription);
+            alert('Subscription PDF downloaded successfully!');
+        } catch (error) {
+            console.error('Error generating subscription PDF:', error);
+            alert('Failed to download subscription PDF');
+        }
+    };
+
+    const handleDownloadAllSubscriptionsPDF = async () => {
+        if (mySubscriptions.length === 0) {
+            alert('No subscriptions available to download');
+            return;
+        }
+
+        try {
+            await generateSubscriptionPDF(mySubscriptions, 'All My Subscriptions');
+            alert('All subscriptions PDF downloaded successfully!');
+        } catch (error) {
+            console.error('Error generating all subscriptions PDF:', error);
+            alert('Failed to download subscriptions PDF');
         }
     };
 
@@ -199,11 +225,21 @@ const UserDashboard = () => {
         </div>
     );
 
-      const renderMySubscriptions = () => (
+    const renderMySubscriptions = () => (
         <div className="subscriptions-modern">
             <div className="subscriptions-header">
-                <h1>My Subscriptions</h1>
-                <p>Manage your active fitness plans and track your progress</p>
+                <div className="header-content">
+                    <h1>My Subscriptions</h1>
+                    <p>Manage your active fitness plans and track your progress</p>
+                </div>
+                {mySubscriptions.length > 0 && (
+                    <button 
+                        className="btn-download-all"
+                        onClick={handleDownloadAllSubscriptionsPDF}
+                    >
+                        📄 Download All as PDF
+                    </button>
+                )}
             </div>
 
             {mySubscriptions.length === 0 ? (
@@ -224,7 +260,6 @@ const UserDashboard = () => {
                         <div 
                             key={subscription._id} 
                             className={`subscription-card-modern ${subscription.status}`}
-                            onClick={() => setSelectedSubscription(subscription)}
                         >
                             <div className="subscription-header-modern">
                                 <div className="trainer-avatar-small">
@@ -307,9 +342,21 @@ const UserDashboard = () => {
                             
                             <div className="subscription-footer">
                                 <span className="price">${subscription.amount}</span>
-                                <button className="view-details-btn">
-                                    View Details →
-                                </button>
+                                <div className="subscription-actions">
+                                    <button 
+                                        className="view-details-btn"
+                                        onClick={() => setSelectedSubscription(subscription)}
+                                    >
+                                        View Details →
+                                    </button>
+                                    <button 
+                                        className="download-pdf-btn"
+                                        onClick={() => handleDownloadSubscriptionPDF(subscription)}
+                                        title="Download as PDF"
+                                    >
+                                        📄
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -322,12 +369,20 @@ const UserDashboard = () => {
                     <div className="modal-content x-large">
                         <div className="modal-header">
                             <h2>Subscription Details</h2>
-                            <button 
-                                className="close-btn"
-                                onClick={() => setSelectedSubscription(null)}
-                            >
-                                ×
-                            </button>
+                            <div className="modal-header-actions">
+                                <button 
+                                    className="btn-download-pdf"
+                                    onClick={() => handleDownloadSubscriptionPDF(selectedSubscription)}
+                                >
+                                    📄 Download PDF
+                                </button>
+                                <button 
+                                    className="close-btn"
+                                    onClick={() => setSelectedSubscription(null)}
+                                >
+                                    ×
+                                </button>
+                            </div>
                         </div>
                         
                         <div className="subscription-detail">
@@ -524,11 +579,12 @@ const UserDashboard = () => {
                             >
                                 Close
                             </button>
-                            {/* {selectedSubscription.status === 'active' && (
-                                <button className="btn-primary-large">
-                                    Manage Subscription
-                                </button>
-                            )} */}
+                            <button 
+                                className="btn-download-pdf"
+                                onClick={() => handleDownloadSubscriptionPDF(selectedSubscription)}
+                            >
+                                📄 Download PDF
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -683,7 +739,7 @@ const UserDashboard = () => {
     const handleLogout = async () => {
         try {
             await logout();
-            navigate('/login'); // Redirect to login page after logout
+            navigate('/login');
         } catch (error) {
             console.error('Error during logout:', error);
         }
@@ -700,7 +756,7 @@ const UserDashboard = () => {
                     <div className="user-welcome">
                         <span>Welcome, {currentUser?.name}</span>
                     </div>
-                     <button onClick={handleLogout} className="logout-button-modern">
+                    <button onClick={handleLogout} className="logout-button-modern">
                         Logout
                     </button>
                 </div>

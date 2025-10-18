@@ -179,7 +179,7 @@
     padding: 2rem;
     border-radius: 15px;
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: rgb(12, 1, 1);
+    color: white;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
@@ -301,19 +301,40 @@
 }
 
 .subscriptions-header {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 3rem;
 }
 
-.subscriptions-header h1 {
+.header-content h1 {
     font-size: 2.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     color: #333;
 }
 
-.subscriptions-header p {
+.header-content p {
     font-size: 1.2rem;
     color: #666;
+    margin: 0;
+}
+
+.btn-download-all {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.btn-download-all:hover {
+    transform: translateY(-2px);
 }
 
 .subscriptions-grid-modern {
@@ -409,16 +430,52 @@
     margin: 0;
 }
 
+.plan-description {
+    color: #666;
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+}
+
 .included-plans {
     margin: 1rem 0;
 }
 
+.included-plan-category {
+    margin-bottom: 1rem;
+}
+
+.included-plan-category h5 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 0.9rem;
+}
+
 .included-plan-item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
-    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 6px;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+}
+
+.included-plan-item span {
+    font-weight: 500;
+    color: #333;
+}
+
+.included-plan-item small {
     color: #666;
+}
+
+.more-plans {
+    text-align: center;
+    color: #667eea;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
 }
 
 .subscription-dates {
@@ -432,6 +489,40 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
+}
+
+.payment-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.payment-status {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.transaction-id {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.status-completed {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.status-failed {
+    color: #dc3545;
+    font-weight: 600;
 }
 
 .subscription-footer {
@@ -448,12 +539,33 @@
     color: #333;
 }
 
+.subscription-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .view-details-btn {
     background: none;
     border: none;
     color: #667eea;
     cursor: pointer;
     font-weight: 600;
+}
+
+.download-pdf-btn {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.2s;
+}
+
+.download-pdf-btn:hover {
+    transform: scale(1.1);
 }
 
 /* Modal Styles */
@@ -471,15 +583,24 @@
     padding: 1rem;
 }
 
-.modal-content.large {
+.modal-content {
     background: white;
     border-radius: 20px;
     padding: 2rem;
-    max-width: 800px;
+    max-width: 500px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content.large {
+    max-width: 800px;
+}
+
+.modal-content.x-large {
+    max-width: 1000px;
+    width: 95%;
 }
 
 .modal-header {
@@ -496,6 +617,12 @@
     color: #333;
 }
 
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .close-btn {
     background: none;
     border: none;
@@ -504,171 +631,25 @@
     color: #666;
 }
 
-/* Subscription Flow */
-.subscription-flow {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.plans-grid-modern {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-}
-
-.plan-card-modern {
-    background: #f8f9fa;
-    padding: 2rem;
-    border-radius: 15px;
-    border: 2px solid transparent;
+.btn-download-pdf {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-.plan-card-modern.selected {
-    border-color: #667eea;
-    background: #e3f2fd;
-    transform: scale(1.05);
-}
-
-.plan-header {
+    font-weight: 600;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
-}
-
-.plan-header h4 {
-    margin: 0;
-    color: #333;
-}
-
-.plan-price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #667eea;
-}
-
-.plan-duration {
-    color: #666;
-    margin: 0 0 1rem 0;
-}
-
-.plan-features-modern {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0;
-    text-align: left;
-}
-
-.plan-features-modern li {
-    padding: 0.5rem 0;
-    color: #666;
-}
-
-.plan-selector {
-    margin-top: 1rem;
-    padding: 0.5rem;
-    background: #667eea;
-    color: white;
-    border-radius: 5px;
-    font-weight: 600;
-}
-
-.plan-selection-modern {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin: 1rem 0;
-}
-
-.plan-option {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 15px;
-}
-
-.plan-option h4 {
-    margin: 0 0 1rem 0;
-    color: #333;
-}
-
-.plan-select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-}
-
-.order-summary-modern {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 15px;
-}
-
-.summary-items {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    color: #666;
-}
-
-.summary-total {
-    display: flex;
-    justify-content: space-between;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    padding-top: 1rem;
-    border-top: 1px solid #ddd;
-}
-
-.modal-actions-modern {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-}
-
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.btn-primary-large {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 600;
+    gap: 0.5rem;
     transition: transform 0.2s;
 }
 
-.btn-primary-large:hover:not(:disabled) {
+.btn-download-pdf:hover {
     transform: translateY(-2px);
 }
 
-.btn-primary-large:disabled {
-    background: #6c757d;
-    cursor: not-allowed;
-}
-
-/* Subscription Detail Styles */
+/* Enhanced Subscription Detail Styles */
 .subscription-detail {
     display: flex;
     flex-direction: column;
@@ -690,166 +671,6 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-}
-
-.plan-detail h4 {
-    margin: 0 0 0.5rem 0;
-    color: #333;
-}
-
-.plan-detail p {
-    margin: 0.25rem 0;
-    color: #666;
-}
-
-.timeline {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.timeline-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem;
-    background: white;
-    border-radius: 8px;
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-}
-
-.empty-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-}
-
-.empty-state h3 {
-    margin: 0 0 1rem 0;
-    color: #333;
-}
-
-.empty-state p {
-    margin: 0 0 2rem 0;
-    color: #666;
-    font-size: 1.1rem;
-}
-
-/* Loading States */
-.loading-modern {
-    text-align: center;
-    padding: 3rem;
-    font-size: 1.2rem;
-    color: #666;
-}
-
-.loading-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
-}
-
-.trainer-card-skeleton {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.skeleton-image {
-    width: 80px;
-    height: 80px;
-    background: #e0e0e0;
-    border-radius: 50%;
-    margin: 0 auto 1.5rem;
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-.skeleton-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.skeleton-line {
-    height: 1rem;
-    background: #e0e0e0;
-    border-radius: 4px;
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-.skeleton-line.short {
-    width: 60%;
-    margin: 0 auto;
-}
-
-.skeleton-line.medium {
-    width: 80%;
-}
-
-.skeleton-line.long {
-    width: 100%;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .user-content-modern {
-        flex-direction: column;
-    }
-    
-    .sidebar-modern {
-        width: 100%;
-        padding: 1rem 0;
-    }
-    
-    .nav-item {
-        justify-content: center;
-    }
-    
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-    
-    .stats-section {
-        grid-template-columns: 1fr;
-        padding: 2rem 1rem;
-    }
-    
-    .trainers-grid-modern,
-    .subscriptions-grid-modern {
-        grid-template-columns: 1fr;
-    }
-    
-    .plan-selection-modern {
-        grid-template-columns: 1fr;
-    }
-    
-    .modal-actions-modern {
-        flex-direction: column;
-    }
-}
-
-
-/* Enhanced Subscription Details CSS */
-.modal-content.x-large {
-    max-width: 1000px;
-    width: 95%;
-    max-height: 95vh;
 }
 
 .trainer-avatar-large {
@@ -877,20 +698,32 @@
     color: #666;
 }
 
+.plan-detail-comprehensive {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
 .plan-header-detail {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
 
+.plan-header-detail h4 {
+    margin: 0;
+    color: #333;
+}
+
 .plan-type-badge {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 15px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 600;
+    text-transform: uppercase;
 }
 
 .plan-stats {
@@ -916,11 +749,19 @@
     color: #333;
 }
 
+.plan-features-detail {
+    margin-top: 1.5rem;
+}
+
+.plan-features-detail h5 {
+    margin: 0 0 1rem 0;
+    color: #333;
+}
+
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 0.5rem;
-    margin-top: 1rem;
 }
 
 .feature-item {
@@ -960,12 +801,6 @@
     font-size: 1.25rem;
     font-weight: bold;
     color: #667eea;
-}
-
-.plan-description {
-    color: #666;
-    margin-bottom: 1rem;
-    line-height: 1.5;
 }
 
 .plan-meta {
@@ -1128,11 +963,6 @@
     border-radius: 8px;
 }
 
-.payment-info-item span:first-child {
-    color: #666;
-    font-weight: 500;
-}
-
 .payment-status-badge {
     padding: 0.25rem 0.75rem;
     border-radius: 15px;
@@ -1155,84 +985,332 @@
     color: #721c24;
 }
 
-/* Enhanced subscription card styles */
-.included-plan-category {
-    margin-bottom: 1rem;
+/* Subscription Flow Styles */
+.subscription-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.included-plan-category h5 {
-    margin: 0 0 0.5rem 0;
-    color: #333;
-    font-size: 0.9rem;
+.subscription-plans-modern {
+    margin: 2rem 0;
 }
 
-.included-plan-item {
+.plans-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.plan-card-modern {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.plan-card-modern.selected {
+    border-color: #667eea;
+    background: #e3f2fd;
+    transform: scale(1.05);
+}
+
+.plan-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
-    background: white;
-    border-radius: 6px;
-    margin-bottom: 0.25rem;
-    font-size: 0.8rem;
+    margin-bottom: 1rem;
 }
 
-.included-plan-item span {
-    font-weight: 500;
+.plan-header h4 {
+    margin: 0;
     color: #333;
 }
 
-.included-plan-item small {
-    color: #666;
-}
-
-.more-plans {
-    text-align: center;
+.plan-price {
+    font-size: 1.5rem;
+    font-weight: bold;
     color: #667eea;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
 }
 
-.payment-info {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
+.plan-duration {
+    color: #666;
+    margin: 0 0 1rem 0;
 }
 
-.payment-status {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
+.plan-features-modern {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    text-align: left;
 }
 
-.transaction-id {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
+.plan-features-modern li {
+    padding: 0.5rem 0;
     color: #666;
 }
 
-.status-completed {
-    color: #28a745;
+.plan-selector {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: #667eea;
+    color: white;
+    border-radius: 5px;
     font-weight: 600;
 }
 
-.status-pending {
-    color: #ffc107;
+.trainer-plans-modern {
+    margin: 2rem 0;
+}
+
+.plan-selection-modern {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1rem 0;
+}
+
+.plan-option {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 15px;
+}
+
+.plan-option h4 {
+    margin: 0 0 1rem 0;
+    color: #333;
+}
+
+.plan-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.order-summary-modern {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 15px;
+}
+
+.summary-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.modal-actions-modern {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    cursor: pointer;
     font-weight: 600;
 }
 
-.status-failed {
-    color: #dc3545;
+.btn-primary-large {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    cursor: pointer;
     font-weight: 600;
+    transition: transform 0.2s;
 }
 
-/* Responsive adjustments */
+.btn-primary-large:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.btn-primary-large:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Loading States */
+.loading-modern {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.loading-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.trainer-card-skeleton {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 120px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.skeleton-line {
+    height: 1rem;
+    background: #e0e0e0;
+    border-radius: 4px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-line.short {
+    width: 60%;
+}
+
+.skeleton-line.medium {
+    width: 80%;
+}
+
+.skeleton-line.long {
+    width: 100%;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+}
+
+.empty-state p {
+    margin: 0 0 2rem 0;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .modal-content.x-large {
-        width: 95%;
-        margin: 1rem;
+    .user-content-modern {
+        flex-direction: column;
+    }
+    
+    .sidebar-modern {
+        width: 100%;
+        padding: 1rem 0;
+    }
+    
+    .nav-item {
+        justify-content: center;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .stats-section {
+        grid-template-columns: 1fr;
+        padding: 2rem 1rem;
+    }
+    
+    .trainers-grid-modern,
+    .subscriptions-grid-modern {
+        grid-template-columns: 1fr;
+    }
+    
+    .plan-selection-modern {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-actions-modern {
+        flex-direction: column;
+    }
+    
+    .subscriptions-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .subscription-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .modal-header-actions {
+        flex-direction: column;
+        gap: 0.5rem;
     }
     
     .plans-grid-detail {
