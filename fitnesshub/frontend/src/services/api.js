@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'http://localhost:5000/api', // Your backend base URL
 });
 
 // Add token to requests
@@ -13,23 +13,42 @@ API.interceptors.request.use((config) => {
     return config;
 });
 
+// Response interceptor for error handling
+API.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Token expired or invalid
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 export const authAPI = {
     register: (userData) => API.post('/auth/register', userData),
     login: (credentials) => API.post('/auth/login', credentials),
 };
 
-// Add to existing api.js
 export const adminAPI = {
+    // User Management
     getUsers: (params) => API.get('/admin/users', { params }),
     getPendingTrainers: () => API.get('/admin/trainers/pending'),
     approveTrainer: (id) => API.put(`/admin/trainers/${id}/approve`),
     updateUser: (id, data) => API.put(`/admin/users/${id}`, data),
     deleteUser: (id) => API.delete(`/admin/users/${id}`),
     getStatistics: () => API.get('/admin/reports/statistics'),
-    getUserProfile: (id) => API.get(`/admin/users/${id}/profile`)
+    getUserProfile: (id) => API.get(`/admin/users/${id}/profile`),
+
+    // Subscription Plans - CORRECTED: Use API instance, not axios directly
+    getSubscriptionPlans: () => API.get('/admin/subscription-plans'),
+    createSubscriptionPlan: (data) => API.post('/admin/subscription-plans', data),
+    updateSubscriptionPlan: (id, data) => API.put(`/admin/subscription-plans/${id}`, data),
+    deleteSubscriptionPlan: (id) => API.delete(`/admin/subscription-plans/${id}`),
 };
 
-// Add to existing api.js
 export const trainerAPI = {
     // Diet Plans
     createDietPlan: (data) => API.post('/trainer/diet-plans', data),
@@ -55,6 +74,8 @@ export const userAPI = {
     getMySubscriptions: () => API.get('/user/my-subscriptions')
 };
 
+// You don't need this separate subscriptionPlanAPI since it's already in adminAPI
+// But if you want to keep it for organization, make sure it uses the same API instance:
 export const subscriptionPlanAPI = {
     create: (data) => API.post('/admin/subscription-plans', data),
     getAll: () => API.get('/admin/subscription-plans'),

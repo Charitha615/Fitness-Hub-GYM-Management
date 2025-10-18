@@ -23,7 +23,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/admin', require('./routes/admin'));
 
 // Add these routes
-app.use('/api/trainer', require('./routes/trainer'));
+app.use('/api/trainer', require('./routes/trainer'));    
 app.use('/api/user', require('./routes/user'));
 app.use('/api/admin/subscription-plans', require('./routes/subscriptionPlans'));
 

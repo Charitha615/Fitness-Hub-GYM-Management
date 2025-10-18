@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { adminAPI } from '../../services/api';
 import './AdminDashboard.css';
+import SubscriptionPlans from './SubscriptionPlans';
 
 const AdminDashboard = () => {
     const { currentUser, logout } = useAuth();
@@ -172,19 +173,19 @@ const AdminDashboard = () => {
                                 </td>
                                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                 <td className="actions">
-                                    <button 
+                                    <button
                                         className="btn-view"
                                         onClick={() => setSelectedUser(user)}
                                     >
                                         View
                                     </button>
-                                    <button 
+                                    <button
                                         className="btn-edit"
                                         onClick={() => setSelectedUser(user)}
                                     >
                                         Edit
                                     </button>
-                                    <button 
+                                    <button
                                         className="btn-delete"
                                         onClick={() => handleDeleteUser(user._id, user.name)}
                                         disabled={user._id === currentUser.id}
@@ -216,13 +217,13 @@ const AdminDashboard = () => {
                             <p><strong>Experience:</strong> {trainer.experience || 0} years</p>
                             <p><strong>Applied:</strong> {new Date(trainer.createdAt).toLocaleDateString()}</p>
                             <div className="trainer-actions">
-                                <button 
+                                <button
                                     className="btn-approve"
                                     onClick={() => handleApproveTrainer(trainer._id)}
                                 >
                                     Approve
                                 </button>
-                                <button 
+                                <button
                                     className="btn-view"
                                     onClick={() => setSelectedUser(trainer)}
                                 >
@@ -244,13 +245,13 @@ const AdminDashboard = () => {
                     <div className="chart-container">
                         <h3>User Statistics</h3>
                         <div className="chart">
-                            <div className="chart-bar" style={{height: `${(statistics.totalUsers / 100) * 100}%`}}>
+                            <div className="chart-bar" style={{ height: `${(statistics.totalUsers / 100) * 100}%` }}>
                                 <span>Total Users: {statistics.totalUsers}</span>
                             </div>
-                            <div className="chart-bar" style={{height: `${(statistics.totalTrainers / 100) * 100}%`}}>
+                            <div className="chart-bar" style={{ height: `${(statistics.totalTrainers / 100) * 100}%` }}>
                                 <span>Total Trainers: {statistics.totalTrainers}</span>
                             </div>
-                            <div className="chart-bar" style={{height: `${(statistics.pendingTrainers / 10) * 100}%`}}>
+                            <div className="chart-bar" style={{ height: `${(statistics.pendingTrainers / 10) * 100}%` }}>
                                 <span>Pending: {statistics.pendingTrainers}</span>
                             </div>
                         </div>
@@ -311,25 +312,32 @@ const AdminDashboard = () => {
 
             <div className="admin-content">
                 <div className="sidebar">
-                    <button 
+                    <button
                         className={activeTab === 'dashboard' ? 'active' : ''}
                         onClick={() => setActiveTab('dashboard')}
                     >
                         Dashboard
                     </button>
-                    <button 
+                    <button
                         className={activeTab === 'users' ? 'active' : ''}
                         onClick={() => setActiveTab('users')}
                     >
                         User Management
                     </button>
-                    <button 
+                    <button
                         className={activeTab === 'pending-trainers' ? 'active' : ''}
                         onClick={() => setActiveTab('pending-trainers')}
                     >
                         Pending Trainers
                     </button>
-                    <button 
+
+                    <button
+                        className={activeTab === 'subscription-plans' ? 'active' : ''}
+                        onClick={() => setActiveTab('subscription-plans')}
+                    >
+                        Subscription Plans
+                    </button>
+                    <button
                         className={activeTab === 'reports' ? 'active' : ''}
                         onClick={() => setActiveTab('reports')}
                     >
@@ -339,11 +347,12 @@ const AdminDashboard = () => {
 
                 <div className="main-content">
                     {loading && <div className="loading">Loading...</div>}
-                    
+
                     {activeTab === 'dashboard' && renderDashboard()}
                     {activeTab === 'users' && renderUsers()}
                     {activeTab === 'pending-trainers' && renderPendingTrainers()}
                     {activeTab === 'reports' && renderReports()}
+                    {activeTab === 'subscription-plans' && <SubscriptionPlans />}
                 </div>
             </div>
 

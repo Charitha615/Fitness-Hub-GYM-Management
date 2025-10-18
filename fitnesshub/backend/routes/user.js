@@ -1,6 +1,9 @@
 const express = require('express');
 const UserSubscription = require('../models/UserSubscription');
 const SubscriptionPlan = require('../models/SubscriptionPlan');
+const User = require('../models/User'); // Add this import
+const DietPlan = require('../models/DietPlan'); // Add this import
+const WorkoutPlan = require('../models/WorkoutPlan'); // Add this import
 const { auth } = require('../middleware/auth');
 const router = express.Router();
 
