@@ -249,7 +249,7 @@ const SubscriptionPlans = () => {
                                     />
                                 </div>
                                 <div className="form-group-modern">
-                                    <label>Price ($) *</label>
+                                    <label>Price (LKR) *</label>
                                     <input
                                         type="number"
                                         name="price"
@@ -352,7 +352,7 @@ const SubscriptionPlans = () => {
                                     <span className="plan-type-badge">{plan.planType}</span>
                                 </div>
                                 <div className="plan-price-modern">
-                                    ${plan.price}
+                                    LKR{plan.price}
                                     <span className="plan-duration">/{plan.duration} days</span>
                                 </div>
                             </div>

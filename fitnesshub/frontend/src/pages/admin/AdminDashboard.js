@@ -837,7 +837,7 @@ const AdminDashboard = () => {
                     </button>
                     <button
                         className={`nav-item-modern ${activeTab === 'pending-trainers' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('pending-trainers')}
+                        onClick={() => setActiveTab('pending-trainers')}    
                     >
                         <span className="nav-icon">⏳</span>
                         Pending Trainers
